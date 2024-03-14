@@ -412,6 +412,9 @@ YesNoBox::
 
 PlaceYesNoBox::
 	jr _YesNoBox
+	
+NoYesBox::
+	newfarjp _NoYesBox
 
 _YesNoBox::
 ; Return nc (yes) or c (no).

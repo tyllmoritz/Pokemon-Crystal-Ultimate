@@ -1,5 +1,5 @@
 ItemNames::
-	db "# BALL@"
+	db "POKé BALL@" ; VWF can't print "# BALL"
 	db "GREAT BALL@"
 	db "ULTRA BALL@"
 	db "MASTER BALL@"
@@ -43,7 +43,7 @@ ItemNames::
 	db "LEAF STONE@"
 	db "METAL POWDER@"
 	db "NUGGET@"
-	db "# DOLL@"
+	db "POKé DOLL@" ; VWF can't print "# BALL"
 	db "FULL HEAL@"
 	db "REVIVE@"
 	db "MAX ETHER@"

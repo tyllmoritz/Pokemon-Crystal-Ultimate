@@ -284,11 +284,12 @@ GetPredefPal:
 	ret
 
 LoadHLPaletteIntoDE:
+	ld c, 1 palettes
+LoadHLBytesIntoDE:
 	ldh a, [rSVBK]
 	push af
 	ld a, BANK(wOBPals1)
 	ldh [rSVBK], a
-	ld c, 1 palettes
 .loop
 	ld a, [hli]
 	ld [de], a
@@ -473,6 +474,19 @@ InitPartyMenuOBPals:
 	ld a, BANK(wOBPals1)
 	call FarCopyWRAM
 	ret
+	
+SetFirstOBJPalette::
+; input: e must contain the offset of the selected palette from PartyMenuOBPals
+	ld hl, PartyMenuOBPals
+	ld d, 0
+	add hl, de
+	ld de, wOBPals1
+	ld bc, 1 palettes
+	ld a, BANK(wOBPals1)
+	call FarCopyWRAM
+	ld a, TRUE
+	ldh [hCGBPalUpdate], a
+	jp ApplyPals
 
 GetBattlemonBackpicPalettePointer:
 	push de
@@ -1129,6 +1143,17 @@ INCLUDE "gfx/stats/party_menu_bg_mobile.pal"
 PartyMenuBGPalette:
 INCLUDE "gfx/stats/party_menu_bg.pal"
 
+BillsPC_ThemePals:
+INCLUDE "gfx/pc/themes.pal"
+
+BillsPC_CursorPalette:
+	; middle colors are set dynamically
+	RGB 31,31,31, 31,31,31, 00,00,00, 00,00,00
+BillsPC_PackPalette:
+	RGB 31,31,31, 31,31,31, 07,19,07, 00,00,00
+BillsPC_WhitePalette:
+	RGB 31,31,31, 31,31,31, 31,31,31, 31,31,31
+
 TilesetBGPalette:
 INCLUDE "gfx/tilesets/bg_tiles.pal"
 
@@ -1161,20 +1186,6 @@ INCLUDE "gfx/pokegear/pokegear.pal"
 
 FemalePokegearPals:
 INCLUDE "gfx/pokegear/pokegear_f.pal"
-
-; Input: E must contain the offset of the selected palette from PartyMenuOBPals.
-SetFirstOBJPalette::
-	ld hl, PartyMenuOBPals
-	ld d, 0
-	add hl, de
- 	ld de, wOBPals1
-	ld bc, 1 palettes
-	ld a, BANK(wOBPals1)
-	call FarCopyWRAM
-	ld a, TRUE
- 	ldh [hCGBPalUpdate], a
- 	call ApplyPals
- 	ret
 
 BetaPokerPals:
 INCLUDE "gfx/beta_poker/beta_poker.pal"

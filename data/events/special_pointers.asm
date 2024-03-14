@@ -183,7 +183,6 @@ SpecialsPointers::
 	add_special InitialSetDSTFlag
 	add_special InitialClearDSTFlag
 	add_special MoveReminder
-	add_special PocketPC
 	add_special GiveElekid
 	add_special GiveMagby
 	add_special HiddenPowerGuru

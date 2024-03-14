@@ -54,7 +54,6 @@ StdScripts::
 	add_stdscript ReceiveItemScript
 	add_stdscript ReceiveTogepiEggScript
 	add_stdscript PCScript
-	add_stdscript PocketPCScript
 	add_stdscript GameCornerCoinVendorScript
 	add_stdscript HappinessCheckScript
 
@@ -237,12 +236,6 @@ TrashCanScript:
 PCScript:
 	opentext
 	special PokemonCenterPC
-	closetext
-	end
-	
-PocketPCScript:
-	opentext
-	special PocketPC
 	closetext
 	end
 

@@ -123,11 +123,21 @@ sChecksum:: dw
 sCheckValue2:: db ; loaded with SAVE_CHECK_VALUE_2, used to check save corruption
 
 
-SECTION "Active Box", SRAM
+SECTION "Box Metadata", SRAM
 
-sBox:: box sBox
+for n, 1, NUM_BOXES + 1
+sNewBox{d:n}:: newbox sNewBox{d:n}
+endr
+sNewBoxEnd::
 
-	ds $100
+for n, 1, NUM_BOXES + 1
+sBackupNewBox{d:n}:: newbox sBackupNewBox{d:n}
+endr
+sBackupNewBoxEnd::
+
+sWritingBackup:: db ; 1 if we're saving, anything else if not.
+
+	ds $ff
 
 
 SECTION "Link Battle Data", SRAM
@@ -218,26 +228,14 @@ sBTMonPrevPrevTrainer2:: db
 sBTMonPrevPrevTrainer3:: db
 
 
-SECTION "Boxes 1-7", SRAM
+SECTION "PokeDB Bank 1", SRAM
 
-sBox1::  box sBox1
-sBox2::  box sBox2
-sBox3::  box sBox3
-sBox4::  box sBox4
-sBox5::  box sBox5
-sBox6::  box sBox6
-sBox7::  box sBox7
+sNewBoxMons1:: pokedb sNewBoxMons1, MONDB_ENTRIES
 
 
-SECTION "Boxes 8-14", SRAM
+SECTION "PokeDB Bank 2", SRAM
 
-sBox8::  box sBox8
-sBox9::  box sBox9
-sBox10:: box sBox10
-sBox11:: box sBox11
-sBox12:: box sBox12
-sBox13:: box sBox13
-sBox14:: box sBox14
+sNewBoxMons2:: pokedb sNewBoxMons2, MONDB_ENTRIES
 
 
 SECTION "SRAM Mobile 1", SRAM

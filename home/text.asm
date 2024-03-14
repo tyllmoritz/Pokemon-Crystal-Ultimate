@@ -50,51 +50,64 @@ Textbox::
 	pop hl
 	pop bc
 	jr TextboxPalette
+	
+TextBoxCharacters:
+	db "┌─┐" ; top
+	db "│ │" ; middle
+	db "└─┘" ; bottom
 
 TextboxBorder::
+	ld de, TextBoxCharacters
+	; fallthrough
+CreateBoxBorders::
+	ld a, SCREEN_WIDTH
+	
 	; Top
-	push hl
-	ld a, "┌"
-	ld [hli], a
-	inc a ; "─"
-	call .PlaceChars
-	inc a ; "┐"
-	ld [hl], a
-	pop hl
+	call .PlaceRow
+	jr .row
 
 	; Middle
-	ld de, SCREEN_WIDTH
-	add hl, de
+.row_loop
+	dec de
+	dec de
+	dec de
 .row
-	push hl
-	ld a, "│"
-	ld [hli], a
-	ld a, " "
-	call .PlaceChars
-	ld [hl], "│"
-	pop hl
-
-	ld de, SCREEN_WIDTH
-	add hl, de
+	call .PlaceRow
 	dec b
-	jr nz, .row
+	jr nz, .row_loop
 
-	; Bottom
-	ld a, "└"
+	; Bottom row (fallthrough)
+
+.PlaceRow:
+	push af
+	push hl
+	ld a, [de]
+	inc de
 	ld [hli], a
-	ld a, "─"
+	ld a, [de]
+	inc de
 	call .PlaceChars
-	ld [hl], "┘"
 
+	ld a, [de]
+	inc de
+	ld [hl], a
+	pop hl
+	pop af
+	push bc
+	ld b, 0
+	ld c, a
+	add hl, bc
+	pop bc
 	ret
 
 .PlaceChars:
 ; Place char a c times.
-	ld d, c
+	push bc
 .loop
 	ld [hli], a
-	dec d
+	dec c
 	jr nz, .loop
+	pop bc
 	ret
 
 TextboxPalette::
@@ -155,6 +168,30 @@ SetUpTextbox::
 	call UpdateSprites
 	call ApplyTilemap
 	pop hl
+	ret
+
+PlaceVWFString::
+; Place string de at hl with offset in c.
+; Read while in ROM0 so [de] can be from any ROMX bank.
+.loop
+	ld a, [de]
+	newfarcall PlaceNextVWFChar
+	jr nz, .loop
+	ret
+
+GetVWFLength::
+; Returns length of string de in a.
+; Read while in ROM0 so [de] can be from any ROMX bank.
+	push de
+	push bc
+	ld c, 0
+.loop
+	ld a, [de]
+	newfarcall _GetNextVWFLength
+	jr nz, .loop
+	ld a, c
+	pop bc
+	pop de
 	ret
 
 PlaceString::
